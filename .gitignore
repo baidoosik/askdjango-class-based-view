@@ -1,10 +1,17 @@
-*.pycache
+
+*.pyc
+__pycache__
+
+
+#static
+static
 
 # myvenv
 myvenv
 
 # db
 db.sqlite3
+.DS_Store
 
 # idea
 .idea
