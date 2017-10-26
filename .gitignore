@@ -1,0 +1,14 @@
+*.pycache
+
+# myvenv
+myvenv
+
+# db
+db.sqlite3
+
+# idea
+.idea
+
+# envs
+
+envs.json
