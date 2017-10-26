@@ -6,4 +6,5 @@ urlpatterns =[
     url(r'^greeting/$', views.greeting, name='greeting'),
     url(r'^greeting2/$', views.greeting2, name='greeting'),
     url(r'^greeting3/$', views.greeting3, name='greeting'),
+    url(r'^post/edit/(?P<pk>\d+)/$', views.post_edit, name='post_edit')
 ]

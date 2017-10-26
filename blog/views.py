@@ -1,5 +1,7 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from django.views import View
+from .forms import PostForm
+from .models import Post
 # Create your views here.
 
 
@@ -19,3 +21,72 @@ class MorgingGreetingView(GreetingView):
 
 greeting2 = MorgingGreetingView.as_view()
 greeting3 = GreetingView.as_view(message='good night')
+
+
+'''
+# CBV.as_view(**init_kwargs)의 동작방식
+class View(object):
+    def __init__(self, **kwargs):
+        for key,value in kwargs.items():
+            setattr(self, key, value)
+
+
+    @classmethod
+    def as_view(cls, **initkwargs):
+        def view(request, *args, **kwargs):
+            self = cls(**kwargs)
+            return self.dispatch(request, *args, **kwargs)
+        return view
+'''
+
+# 재사용이 가능하도록 ,cbv 패텅으로 재구현
+
+
+class EditFormView(View):
+    model = None
+    success_url = None
+    template_name = None
+
+    def get_object(self):
+        pk = self.kwargs['pk']
+        return get_object_or_404(self.model, id=pk)
+
+    def get_success_url(self):
+        return self.success_url
+
+    def get_template_name(self):
+        return self.template_name
+
+    def get_form(self):
+        form_kwargs = {
+            'instance': self.get_object()
+        }
+        if self.request.method == 'POST':
+            form_kwargs.update({
+                'data': self.request.POST,
+                'files': self.request.FILSE
+            })
+        return PostForm(**form_kwargs)
+
+    def get_context_data(self, **kwargs):
+        if 'form' not in kwargs:
+            kwargs['form'] = self.get_form()
+        return kwargs
+
+    def get(self, *args, **kwargs):
+        return render(self.request, self.get_template_name(), self.get_context_data())
+
+    def post(self, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            form.save()
+            return redirect(self.get_success_url())
+        return render(self.request, self.get_template_name(), self.get_context_data(form=form))
+
+
+post_edit = EditFormView.as_view(
+    model=Post,
+    success_url='/greeting',
+    template_name='blog/post_form.html'
+)
+
