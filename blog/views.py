@@ -5,7 +5,7 @@ from .forms import PostForm
 from .models import Post
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 # Create your views here.
 
 
@@ -115,3 +115,10 @@ class PostListView(ListView):
 post_list = PostListView.as_view()
 
 post_detail = DetailView.as_view(model=Post)
+
+
+class PostCreateView(CreateView):
+    model = Post
+    form_class = PostForm
+
+post_new = PostCreateView.as_view()

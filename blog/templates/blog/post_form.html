@@ -6,9 +6,11 @@
     <div class=container>
         <div class="row">
             <div class="col-sm-12">
-                <form>
-                    {% csrf_token %}
-                    {{ form.as_table }}
+                <form method="POST">
+                    <table>
+                        {% csrf_token %}
+                        {{ form.as_table }}
+                    </table>
                     <input type="submit" class="btn-primary">
                 </form>
             </div>
