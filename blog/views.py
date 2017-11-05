@@ -3,9 +3,10 @@ from django.shortcuts import render, HttpResponse, \
 from django.views import View
 from .forms import PostForm
 from .models import Post
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import (
+    ListView, DetailView, CreateView,
+TodayArchiveView
+)
 # Create your views here.
 
 
@@ -122,3 +123,10 @@ class PostCreateView(CreateView):
     form_class = PostForm
 
 post_new = PostCreateView.as_view()
+
+
+class PostTodayArchiveView(TodayArchiveView):
+    model = Post
+    date_field = 'created_at'
+
+post_today_archive = PostTodayArchiveView.as_view()
