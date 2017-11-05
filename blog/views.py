@@ -3,6 +3,8 @@ from django.shortcuts import render, HttpResponse, \
 from django.views import View
 from .forms import PostForm
 from .models import Post
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 # Create your views here.
 
@@ -43,7 +45,7 @@ class View(object):
 
 # 재사용이 가능하도록 ,cbv 패텅으로 재구현
 
-
+@method_decorator(login_required, name='dispatch')
 class EditFormView(View):
     model = None
     success_url = None
