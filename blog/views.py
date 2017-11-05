@@ -99,6 +99,7 @@ post_edit = EditFormView.as_view(
 class PostListView(ListView):
     model = Post
     ordering = '-created_at'
+    paginate_by = 10
 
     def head(self, *args, **kwargs):
         try:
@@ -128,5 +129,6 @@ post_new = PostCreateView.as_view()
 class PostTodayArchiveView(TodayArchiveView):
     model = Post
     date_field = 'created_at'
+    paginate_by = 10
 
 post_today_archive = PostTodayArchiveView.as_view()
