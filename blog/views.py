@@ -1,7 +1,9 @@
-from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
+from django.shortcuts import render, HttpResponse, \
+    get_object_or_404, redirect, Http404
 from django.views import View
 from .forms import PostForm
 from .models import Post
+from django.views.generic import ListView
 # Create your views here.
 
 
@@ -90,3 +92,22 @@ post_edit = EditFormView.as_view(
     template_name='blog/post_form.html'
 )
 
+
+class PostListView(ListView):
+    model = Post
+    ordering = '-created_at'
+
+    def head(self, *args, **kwargs):
+        try:
+            post = Post.objects.last()
+        except Post.DoesNotExist:
+            raise Http404
+
+        response = HttpResponse()
+        response['Last-Modified'] = post.created_at.strftime('%a, %d %b %Y %H:%M:%S GMT')
+        return response
+
+    def delete(self, *args, **kwargs):
+        raise NotImplementedError
+
+post_list = PostListView.as_view()
